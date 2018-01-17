@@ -1,0 +1,26 @@
+LIBNAME mydata “/courses/d1406ae5ba27fe300 ” access=readonly;
+
+DATA new; set mydata.treeaddhealth;
+PROC SORT; BY AID;
+
+proc sql;
+update new
+set alcevr1=2
+where alcevr1=0;
+quit;
+run;
+
+Data new1; set new;
+Proc sort ; by AID;
+
+ods graphics on;
+proc hpsplit seed=16324;
+class alcevr1 TREG1 BIO_SEX HISPANIC WHITE BLACK NAMERICAN ASIAN
+marever1 cocever1 inhever1 Cigavail EXPEL1 ;
+model alcevr1 =AGE BIO_SEX HISPANIC WHITE BLACK NAMERICAN ASIAN ALCPROBS1
+marever1 cocever1 TREG1 inhever1 DEVIANT1 VIOL1 DEP1 ESTEEM1 PARPRES PARACTV
+FAMCONCT schconn1 Cigavail PASSIST EXPEL1 GPA1 ;
+grow entropy;
+prune costcomplexity;
+
+RUN;
